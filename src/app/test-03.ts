@@ -23,7 +23,7 @@ import { CommonModule } from '@angular/common';
                     <br/>
                     <input type="email"  required  value="" name="email" />
                     <br/>
-                    <input type="password" minlength="8" pattern="[A-Za-z]" required value="" name="password" />
+                    <input type="password" minlength="8" required value="" name="password" />
                     <button type="submit" (click)="submit()">Submit</button>
                     <br/><br/>
                     <div *ngIf="logged_in">Logged In!</div>
@@ -37,7 +37,12 @@ export class Test03Component {
     logged_in = false;
     submit()
     {
+        debugger;
         this.email = document.getElementsByName("email");
+        if(!this.email.includes('@') && !this.email.includes('.com')){alert("Please Write Correct email."); return;}
+        if(this.email.split('@')[0].length<2){alert("Please Write Correct email."); return;}
+        if(this.email.split('@')[1].split('.')[0].length<2){alert("Please Write Correct email."); return;}
+    
         this.password = document.getElementsByName("password");
         // if(this.email==null || this.email=="" || this.password==null|| this.password==""){
         //     alert("email or Password Cn't be empty.");return;
