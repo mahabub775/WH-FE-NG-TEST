@@ -15,47 +15,82 @@
 import { Component, NgModule  } from '@angular/core';
 import { RouterModule } from "@angular/router";
 import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule,FormControl, FormBuilder, Validators } from '@angular/forms';
+
 
 @Component({
     selector : 'ng-app',
-    template : `<form>
+    template : `<form [formGroup]="userForm" (ngSubmit)="onFormSubmit()">
                     <h2>Login</h2>
                     <br/>
-                    <input type="email"  required  value="" name="email" />
+                    <input formControlName="email">
+                    <div *ngIf="email.errors && isValidFormSubmitted != null && !isValidFormSubmitted" [ngClass] = "'error'"> 
+                    <div *ngIf="email.errors.required">Email required.</div>    
+                    <div *ngIf="email.errors.pattern">Email not valid.</div> 
+                    </div>		   
                     <br/>
-                    <input type="password" minlength="8" required value="" name="password" />
-                    <button type="submit" (click)="submit()">Submit</button>
+                    <input type="password" formControlName="password">
+                    <div *ngIf="password.errors && isValidFormSubmitted != null && !isValidFormSubmitted" [ngClass] = "'error'"> 
+                        <div *ngIf="password.errors.required">
+                            Password required.
+                        </div>  
+                        <div *ngIf="password.errors.pattern">
+                            Password not valid.
+                        </div> 
+                    </div>		 
+
+                    <button type="submit" >Submit</button>
                     <br/><br/>
                     <div *ngIf="logged_in">Logged In!</div>
                 </form>`
 })
-export class Test03Component {
+export class Test03Component    {
+    pwdPattern ="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{7,}"; 
+    emailPattern = "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
+//valid case email :  mahabub775@gmail.com pass: Ma&1aaa7
+    isValidFormSubmitted = null;    logged_in = false;
+    constructor(private formBuilder:FormBuilder) {
+    }
+   
+    userForm = this.formBuilder.group({
+        email:new FormControl('', [,Validators.required,Validators.email, Validators.pattern(this.emailPattern)]),
+        password:new FormControl('',[Validators.required,Validators.pattern(this.pwdPattern)])
+      });
 
-    email:any ="";
-    password:any = "";
 
-    logged_in = false;
-    submit()
+
+
+    onFormSubmit()
     {
         debugger;
-        this.email = document.getElementsByName("email");
-        if(!this.email.includes('@') && !this.email.includes('.com')){alert("Please Write Correct email."); return;}
-        if(this.email.split('@')[0].length<2){alert("Please Write Correct email."); return;}
-        if(this.email.split('@')[1].split('.')[0].length<2){alert("Please Write Correct email."); return;}
-    
-        this.password = document.getElementsByName("password");
+        this.isValidFormSubmitted = false;
+        if (this.userForm.invalid) {
+           return;
+        }
+        this.isValidFormSubmitted = true;
+        this.logged_in = true;
+
+       
         // if(this.email==null || this.email=="" || this.password==null|| this.password==""){
         //     alert("email or Password Cn't be empty.");return;
         // }
 
         this.logged_in=true;
     }
+    get password() {
+        return this.userForm.get('password');
+     }  
+   
+     get email() {
+        return this.userForm.get('email');
+     }
 }
 
 @NgModule({
     imports : [
         CommonModule,
-       
+        FormsModule, ReactiveFormsModule,
+        // FormControl, FormBuilder, Validators,
         RouterModule.forChild([
             {
                 path : "",

@@ -4,7 +4,7 @@
  * * Spot the memory leak
  * 
  */
-import { Component, NgModule, Injectable, Input  } from '@angular/core';
+import { Component, NgModule, Injectable, Input,  Output, EventEmitter  } from '@angular/core';
 import { RouterModule, Router} from "@angular/router";
 import { CommonModule } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
@@ -37,14 +37,16 @@ export class MainComponent {
     test:string = null;
 
     constructor(private _srv:TestService) {
-
+       // debugger;
     }
 
     ngOnInit() {
-        
+      //  debugger;
+        setTimeout(() => {
         this._srv.test.subscribe(test=>{
             this.test = test;
         });
+    },0);
     }
 }
 
@@ -56,13 +58,14 @@ export class MainComponent {
 export class TextChildComponent {
     
     @Input('skip-current') skip = false;
-
+    @Output()    outputres = new EventEmitter();
     constructor(private _srv:TestService, private _router:Router) {
 
     }
 
     Next() {
         this._router.navigate(["test-six"]);
+    //  return  this.outputres.emit();
     }
 
     ngAfterViewInit() {

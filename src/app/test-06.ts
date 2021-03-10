@@ -37,19 +37,29 @@ import { CommonModule } from '@angular/common';
 export class ReviewComponent {
     // sample input
     review_input = 
-`Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-Maecenas tincidunt vestibulum ligula, sed viverra erat tempus nec. 
+    `Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+    Maecenas tincidunt vestibulum ligula, sed viverra erat tempus nec. 
+    
+    Pellentesque blandit mauris congue elit eleifend, facilisis tristique dolor dictum:
+              1) Nulla et tempus orci
+              2) Integer semper porttitor faucibus
+              
+    At https://wallethub.com <b>bolded text</b>`;
 
-Pellentesque blandit mauris congue elit eleifend, facilisis tristique dolor dictum:
-          1) Nulla et tempus orci
-          2) Integer semper porttitor faucibus
-          
-At https://wallethub.com <b>bolded text</b>`;
 
-    review_content = "";
+    review_content:string = "";
 
     ngOnInit() {
-        this.review_content = this.review_input;
+         var lineBrak = "</br>"; 
+        var whitespace="&nbsp;"
+        var tempOutput = this.review_input.replace(lineBrak,"");
+        tempOutput = tempOutput.replace(whitespace,""); 
+        tempOutput = tempOutput.replace("<b>","");
+        tempOutput = tempOutput.replace("</b>","");
+        tempOutput = tempOutput.replace("https","<a href =https");
+        tempOutput = tempOutput.replace("com","com </a>");
+        
+          this.review_content = tempOutput;
     }
 
 }
